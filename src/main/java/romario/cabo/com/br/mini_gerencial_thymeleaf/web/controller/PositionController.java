@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/cargos")
-public class OfficeController {
+public class PositionController {
 
     @GetMapping("/cadastrar")
     public String save() {

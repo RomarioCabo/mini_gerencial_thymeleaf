@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/funcionarios")
-public class Employee {
+public class EmployeeController {
 
     @GetMapping("/cadastrar")
     public String save() {
