@@ -30,7 +30,7 @@ public class Employee extends AbstractEntity<Long> {
     private LocalDate departureDate;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_endereco")
+    @JoinColumn(name = "id_endereco", nullable = false)
     private Address address;
 
     @ManyToOne

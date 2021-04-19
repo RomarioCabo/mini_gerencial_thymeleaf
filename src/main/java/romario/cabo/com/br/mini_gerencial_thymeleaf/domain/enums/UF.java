@@ -43,4 +43,19 @@ public enum UF {
     public String getDescription() {
         return description;
     }
+
+    public static UF toEnum(String initials) {
+
+        if (initials == null) {
+            return null;
+        }
+
+        for (UF ufEnum : UF.values()) {
+            if (initials.equals(ufEnum.getInitials())) {
+                return ufEnum;
+            }
+        }
+
+        throw new IllegalArgumentException("Id inválido: " + initials);
+    }
 }
