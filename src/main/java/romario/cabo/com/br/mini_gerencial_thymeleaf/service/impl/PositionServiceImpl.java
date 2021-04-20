@@ -7,41 +7,28 @@ import romario.cabo.com.br.mini_gerencial_thymeleaf.exception.BadRequestExceptio
 import romario.cabo.com.br.mini_gerencial_thymeleaf.exception.InternalServerErrorException;
 import romario.cabo.com.br.mini_gerencial_thymeleaf.repository.PositionRepository;
 import romario.cabo.com.br.mini_gerencial_thymeleaf.service.ServiceCrud;
-import romario.cabo.com.br.mini_gerencial_thymeleaf.service.dto.PositionDTO;
-import romario.cabo.com.br.mini_gerencial_thymeleaf.service.form.PositionForm;
-import romario.cabo.com.br.mini_gerencial_thymeleaf.service.mapper.MapperInterface;
 
 import java.util.List;
 
 @Service
 @Transactional
-public class PositionServiceImpl implements ServiceCrud<PositionDTO, PositionForm> {
+public class PositionServiceImpl implements ServiceCrud<Position> {
 
     private final PositionRepository positionRepository;
-    private final MapperInterface<Position, PositionDTO, PositionForm> positionMapper;
 
-    public PositionServiceImpl(PositionRepository positionRepository, MapperInterface<Position, PositionDTO, PositionForm> positionMapper) {
+    public PositionServiceImpl(PositionRepository positionRepository) {
         this.positionRepository = positionRepository;
-        this.positionMapper = positionMapper;
     }
-
+    
     @Override
-    public PositionDTO save(PositionForm form, Long id) {
+    public void save(Position form) {
         positionRepository.findByName(form.getName())
                 .orElseThrow(() -> new BadRequestException("Funcionário já cadastrado com esse nome!"));
 
-        Position position;
-
         try {
-            position = positionRepository.save(getPosition(form, id));
+            positionRepository.save(form);
         } catch (Exception e) {
             throw new InternalServerErrorException("Não foi possível salvar o Cargo!");
-        }
-
-        try {
-            return positionMapper.toDto(position);
-        } catch (Exception e) {
-            throw new BadRequestException("Não foi possível realizar o Mapper para DTO!");
         }
     }
 
@@ -59,27 +46,20 @@ public class PositionServiceImpl implements ServiceCrud<PositionDTO, PositionFor
 
     @Override
     @Transactional(readOnly = true)
-    public List<PositionDTO> findAll() {
+    public List<Position> findAll() {
         try {
-            return positionMapper.toDto(positionRepository.findAll());
+            return positionRepository.findAll();
         } catch (Exception e) {
             throw new InternalServerErrorException("Houve algum problema ao trazer todos os registros");
         }
     }
 
-    public Position getPosition(PositionForm form, Long id) {
+    @Override
+    public Position findById(Long id) {
         try {
-            Position position;
-
-            position = positionMapper.toEntity(form);
-
-            if (id != null) {
-                position.setId(id);
-            }
-
-            return position;
+            return positionRepository.findPositionById(id);
         } catch (Exception e) {
-            throw new BadRequestException("Não foi possível realizar o Mapper para entidade!");
+            throw new InternalServerErrorException("Houve algum problema ao trazer o registro!");
         }
     }
 }

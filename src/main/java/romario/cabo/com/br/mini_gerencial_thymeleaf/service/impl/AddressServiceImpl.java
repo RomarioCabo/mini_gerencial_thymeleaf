@@ -7,39 +7,25 @@ import romario.cabo.com.br.mini_gerencial_thymeleaf.exception.BadRequestExceptio
 import romario.cabo.com.br.mini_gerencial_thymeleaf.exception.InternalServerErrorException;
 import romario.cabo.com.br.mini_gerencial_thymeleaf.repository.AddressRepository;
 import romario.cabo.com.br.mini_gerencial_thymeleaf.service.ServiceCrud;
-import romario.cabo.com.br.mini_gerencial_thymeleaf.service.dto.AddressDTO;
-import romario.cabo.com.br.mini_gerencial_thymeleaf.service.form.AddressForm;
-import romario.cabo.com.br.mini_gerencial_thymeleaf.service.mapper.MapperInterface;
 
 import java.util.List;
 
 @Service
 @Transactional
-public class AddressServiceImpl implements ServiceCrud<AddressDTO, AddressForm> {
+public class AddressServiceImpl implements ServiceCrud<Address> {
 
     private final AddressRepository addressRepository;
-    private final MapperInterface<Address, AddressDTO, AddressForm> addressMapper;
 
-    public AddressServiceImpl(AddressRepository addressRepository, MapperInterface<Address, AddressDTO, AddressForm> addressMapper) {
+    public AddressServiceImpl(AddressRepository addressRepository) {
         this.addressRepository = addressRepository;
-        this.addressMapper = addressMapper;
     }
 
-
     @Override
-    public AddressDTO save(AddressForm form, Long id) {
-        Address address;
-
+    public void save(Address form) {
         try {
-            address = addressRepository.save(getDepartment(form, id));
+            addressRepository.save(form);
         } catch (Exception e) {
             throw new InternalServerErrorException("Não foi possível salvar o Endereço!");
-        }
-
-        try {
-            return addressMapper.toDto(address);
-        } catch (Exception e) {
-            throw new BadRequestException("Não foi possível realizar o Mapper para DTO!");
         }
     }
 
@@ -57,27 +43,21 @@ public class AddressServiceImpl implements ServiceCrud<AddressDTO, AddressForm> 
 
     @Override
     @Transactional(readOnly = true)
-    public List<AddressDTO> findAll() {
+    public List<Address> findAll() {
         try {
-            return addressMapper.toDto(addressRepository.findAll());
+            return addressRepository.findAll();
         } catch (Exception e) {
-            throw new InternalServerErrorException("Houve algum problema ao trazer todos os registros");
+            throw new InternalServerErrorException("Houve algum problema ao trazer todos os registros!");
         }
     }
 
-    public Address getDepartment(AddressForm form, Long id) {
+    @Override
+    @Transactional(readOnly = true)
+    public Address findById(Long id) {
         try {
-            Address address;
-
-            address = addressMapper.toEntity(form);
-
-            if (id != null) {
-                address.setId(id);
-            }
-
-            return address;
+            return addressRepository.findAddressById(id);
         } catch (Exception e) {
-            throw new BadRequestException("Não foi possível realizar o Mapper para entidade!");
+            throw new InternalServerErrorException("Houve algum problema ao trazer todos os registros");
         }
     }
 }
