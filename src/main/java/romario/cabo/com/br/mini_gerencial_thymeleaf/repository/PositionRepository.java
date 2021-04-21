@@ -12,8 +12,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface PositionRepository extends JpaRepository<Position, Long> {
 
+	@Query("SELECT position FROM Position position WHERE position.name=:name")
     Optional<Position> findByName(String name);
-
-    @Query("SELECT position FROM Position position WHERE position.id=:id")
-    Position findPositionById(Long id);
 }

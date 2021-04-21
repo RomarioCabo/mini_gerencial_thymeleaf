@@ -12,9 +12,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
-    @Query("SELECT department FROM Department department WHERE department.id=:id")
-	Department findDepartmentById(Long id);
-
     @Query("SELECT department FROM Department department WHERE department.name=:name")
     Optional<Department> findByName(String name);
 }

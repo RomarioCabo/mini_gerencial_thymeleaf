@@ -58,7 +58,7 @@ public class DepartmentController {
 			attr.addFlashAttribute("fail", "Departamento não localizado em nossa base de dados!");
 		} else {
 			departmentService.save(department);
-			attr.addFlashAttribute("success", "Departamento excluído com sucesso.");
+			attr.addFlashAttribute("success", "Departamento atualizado com sucesso.");
 		}
 
 		return "redirect:/departamentos/cadastrar";

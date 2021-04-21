@@ -44,7 +44,7 @@ public class DepartmentServiceImpl implements ServiceCrud<Department> {
 	@Transactional(readOnly = true)
 	public Department findById(Long id) {
 		try {
-			return departmentRepository.findDepartmentById(id);
+			return departmentRepository.findById(id).get();
 		} catch (Exception e) {
 			return null;
 		}
